@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./Croppie-2.6.4/croppie.css" />
+  <script src="./Croppie-2.6.4/croppie.js"></script>
+  <script src="
+https://cdn.jsdelivr.net/npm/tinycrop@1.7.0/dist/tinycrop.min.js
+"></script>
+    <link href="./index.css" rel="stylesheet"/>
+  </head>
+
+  <body class="body">
+    <main class="main">
+
+      <section class="section tinycrop">
+        <h2 class="title">TinyCropp</h2>
+        <input type="file" class="section__upload" id="uploadTiny" />
+        <div class="section__ch">
+          <article>
+            <h3 class="subtitle">INPUT</h3>
+            <div class="demo" id="demoTiny"></div>
+          </article>
+          <article>
+            <h3 class="subtitle">OUTPUT</h3>
+            <img id="resultTiny" />
+          </article>
+        </div>
+
+        <div class="section__btns">
+          <button class="main-btn croppie__save" id="saveTiny">
+            Save
+          </button>
+          <button class="main-btn croppie__save" id="saveTinyPC">
+            Save on PC
+          </button>
+        </div>
+      </section>
+
+      <section class="section self">
+        <h2 class="title">Самопал "CUTtie"</h2>
+        <input type="file" class="section__upload" id="uploadSelf" />
+        <div class="section__ch">
+          <article>
+            <h3 class="subtitle">INPUT</h3>
+            <div class="demo" id="demoSelf"></div>
+          </article>
+          <article>
+            <h3 class="subtitle">OUTPUT</h3>
+            <img class="result" id="resultSelf" />
+          </article>
+        </div>
+
+        <div class="section__btns">
+          <button class="main-btn croppie__save" id="saveSelf">
+            Save
+          </button>
+          <button class="main-btn croppie__save" id="saveSelfPC">
+            Save on PC
+          </button>
+        </div>
+      </section>
+    </main>
+  </body>
+  <script src="index.js"></script>
+</html>
