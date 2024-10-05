@@ -9,7 +9,7 @@ const uploadSelf = document.getElementById('uploadSelf');
 class CutCropImg {
   constructor() {
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0}
-    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false}
+    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:0,type:'square',changed:false};
     this.image;
     this.maxW;
     this.maxH;
@@ -87,7 +87,7 @@ class CutCropImg {
 
   }
 
-  _findXY(e) {
+  _findXY() {
     const bb = this.canvas.getBoundingClientRect();
     this.XY.offsetX = bb.left;
     this.XY.offsetY = bb.top;
@@ -128,6 +128,15 @@ class CutCropImg {
     this.canvas.onmouseenter = this._findXY.bind(this);
   }
 
+  _initViewPort(params) {
+    this.viewport = {...this.viewport, type: params.type, h: params.height, w: params.width, changed: params.isChanged,ar: params['aspect-ratio']};
+    if (params['aspect-ratio']) {
+      const aspectRatioArr = params['aspect-ratio'].split('/');
+      this.viewport.h = this.viewport.w/aspectRatioArr[0]*aspectRatioArr[1];
+      console.log(this.viewport.h);
+    }
+  }
+
   initCanvas(parentElem, params, url) {
     const oldCanvasDiv = document.getElementById('canvasCuttieDiv');
     if (oldCanvasDiv) {
@@ -146,22 +155,21 @@ class CutCropImg {
       this.canvas.width = drawWidth;
       this.canvas.height = drawHeight;
 
-      this.viewport.h = params.viewport.height;
-      this.viewport.w = params.viewport.width;
+      this._initViewPort(params.viewport);
       this._clearScene();
       this._addViewPort();
       this._addEventListeners();
     }
   }
 
-  getCrop(width, height) {
+  getCrop(params) {
     const canvas = document.createElement('canvas');
     const sx = this.viewport.x/this.scale;
     const sy = this.viewport.y/this.scale;
     const sw = this.viewport.w/this.scale;
     const sh = this.viewport.h/this.scale
-    canvas.width = width ? width : sw;
-    canvas.height = height ? height : sh;
+    canvas.width = params ? params.width : sw;
+    canvas.height = params ? params.height : sh;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(this.image, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 
@@ -170,33 +178,10 @@ class CutCropImg {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //=========================================//
 //=========================================//
 //=========================================//
 //=========================================//
-
-
 
 let cuttie;
 uploadSelf.addEventListener('change', (e) => {
@@ -212,7 +197,9 @@ uploadSelf.addEventListener('change', (e) => {
       viewport: {
         type: 'square',
         width: 200,
-        height: 112.5,
+        height: 200,
+        isChanged: true,
+        'aspect-ratio': '16/9', 
       }
     },
     url
@@ -220,6 +207,6 @@ uploadSelf.addEventListener('change', (e) => {
 });
 
 saveBtnSelf.addEventListener('click', () => {
-  const imaga = cuttie.getCrop(1920,1080);
+  const imaga = cuttie.getCrop({width: 1920, height: 1080});
   resultSelf.src = imaga;
 })
