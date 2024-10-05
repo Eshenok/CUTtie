@@ -1,70 +1,3 @@
-alert(`Тест КРОПЕРОВ для обрезки изображения. 
-Для продолжения нажмите "ок"`);
-
-//TINYCROP
-
-const resultTiny = document.getElementById('resultTiny');
-const saveBtnTiny = document.getElementById('saveTiny');
-const saveBtnTinyPC = document.getElementById('saveTinyPC');
-const uploadTiny = document.getElementById('uploadTiny');
-
-let crop;
-let reg;
-
-uploadTiny.addEventListener('change', (e) => {
-var image = URL.createObjectURL(e.target.files[0]);
-const img = document.createElement('img');
-img.src = image;
-
-  crop = tinycrop.create({
-    parent: '#demoTiny',
-    image: image,
-    bounds: {
-      width: 650,
-      height: 365
-    },
-    backgroundColors: ['#fff', '#f3f3f3'],
-    selection: {
-      color: 'grey',
-      activeColor: 'black',
-      aspectRatio: 16 / 9,
-      minWidth: 0,
-      minHeight: 0,
-      width: 300,
-      height: 300,
-      x: 0,
-      y: 0
-    },
-    onInit: () => { reg={x:0,y:0,width:img.width,height:img.height} }
-  });
-
-  crop.on('end', function(region) {
-    reg = region;
-  });
-
-  saveBtnTiny.addEventListener('click', () => {
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(img, reg.x, reg.y, reg.width, reg.height);
-    const izob = canvas.toDataURL();
-    resultTiny.src = izob;
-  })
-
-  saveBtnTinyPC.addEventListener('click', () => {
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(img, reg.x, reg.y, reg.width, reg.height);
-    const izob = canvas.toDataURL();
-
-    const a = document.createElement('a');
-    a.href = izob;
-    a.download = 'tinycrop.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  })
-})
-
 // CUTtie
 
 const resultSelf = document.getElementById('resultSelf');
@@ -72,32 +5,6 @@ const demoSelf = document.getElementById('demoSelf')
 const saveBtnSelf = document.getElementById('saveSelf');
 const saveBtnSelfPC = document.getElementById('saveSelfPC');
 const uploadSelf = document.getElementById('uploadSelf');
-
-// function createCanvas (parentElem, params, url, viewPortParams) {
-//   const oldCanvasDiv = document.getElementById('canvasCutCropImgDiv');
-//   if (oldCanvasDiv) {
-//     parentElem.removeChild(oldCanvasDiv);
-//   }
-
-//   const canvasDiv = document.createElement('div');
-//   const canvas = document.createElement('canvas');
-//   const ctx = canvas.getContext('2d');
-//   _appendStyles();
-//   parentElem.appendChild(canvasDiv);
-
-//   const img = new Image();
-//   img.src = url;
-//   img.onload = () => {
-//     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
-//     const drawWidth = img.width * scaleFactor;
-//     const drawHeight =  img.height * scaleFactor;
-//     canvas.width = drawWidth;
-//     canvas.height = drawHeight;
-//     ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
-//     _addViewPort();
-//   };
-  
-// }
 
 class CutCropImg {
   constructor() {
