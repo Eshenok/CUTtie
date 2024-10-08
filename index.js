@@ -9,7 +9,8 @@ const uploadSelf = document.getElementById('uploadSelf');
 class CutCropImg {
   constructor() {
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0}
-    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:0,type:'square',changed:false};
+    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:null,type:'square',changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
+    this.state = false;
     this.image;
     this.maxW;
     this.maxH;
@@ -53,6 +54,18 @@ class CutCropImg {
     this.maxH = this.canvas.height - this.viewport.h;
   }
 
+  _handleMove(e) {
+    const mx = parseInt(e.clientX - this.XY.offsetX);
+    const my = parseInt(e.clientY - this.XY.offsetY);
+
+    const dx = mx - this.XY.startX;
+    const dy = my - this.XY.startY;
+    this.XY.startX = mx;
+    this.XY.startY = my;
+
+    return {dx, dy};
+  }
+
   _onMouseDown(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -69,22 +82,87 @@ class CutCropImg {
     e.preventDefault();
     e.stopPropagation();
     this._onMouseHover(e);
-    if (this.viewport.isDraggable && this.canvas.style.cursor === 'move') {
-    const mx = parseInt(e.clientX - this.XY.offsetX);
-    const my = parseInt(e.clientY - this.XY.offsetY);
+    if (!this.viewport.isDraggable) return;
 
-    const dx = mx - this.XY.startX;
-    const dy = my - this.XY.startY;
-    this.XY.startX = mx;
-    this.XY.startY = my;
+    switch (true) {
+      case this.viewport.corners.lu:
+        this._changeLU(e);
+        break;
+
+      case this.viewport.corners.ld:
+        this._changeLD(e);
+        break;
+      
+      case this.viewport.corners.ru:
+        this._changeRU(e);
+        break;
+
+      case this.viewport.corners.rd:
+        this._changeRD(e);
+        break;
+
+      case this.canvas.style.cursor === 'move':
+        this._moveViewport(e);
+        break;
+    }
+
+  }
+
+  _moveViewport(e) {
+    const {dx, dy} = this._handleMove(e);
 
     this.viewport.x = Math.min(Math.max(0, this.viewport.x + dx), this.maxW);
     this.viewport.y = Math.min(Math.max(0, this.viewport.y + dy), this.maxH);
 
     this._clearScene();
     this._addViewPort();
-    }
+  }
 
+  _changeLU(e) {
+    const {dx, dy} = this._handleMove(e);
+
+    this.viewport.x = Math.min(Math.max(0, this.viewport.x + dx), this.maxW);
+    this.viewport.y = Math.min(Math.max(0, this.viewport.y + dy), this.maxH);
+
+    this.viewport.w = Math.min(this.canvas.width, this.viewport.w - dx);
+    this.viewport.h = Math.min(this.canvas.height, this.viewport.h - dy);
+
+    this._clearScene();
+    this._addViewPort();
+  }
+
+  _changeLD(e) {
+    const {dx, dy} = this._handleMove(e);
+
+    this.viewport.x = Math.min(Math.max(0, this.viewport.x + dx), this.maxW);
+
+    this.viewport.w = Math.min(this.canvas.width, this.viewport.w - dx);
+    this.viewport.h = Math.min(this.canvas.height, this.viewport.h + dy);
+
+    this._clearScene();
+    this._addViewPort();
+  }
+
+  _changeRU(e) {
+    const {dx, dy} = this._handleMove(e);
+
+    this.viewport.y = Math.min(Math.max(0, this.viewport.y + dy), this.maxH);
+
+    this.viewport.w = Math.min(this.canvas.width, this.viewport.w + dx);
+    this.viewport.h = Math.min(this.canvas.height, this.viewport.h - dy);
+
+    this._clearScene();
+    this._addViewPort();
+  }
+
+  _changeRD(e) {
+    const {dx, dy} = this._handleMove(e);
+
+    this.viewport.w = Math.min(this.canvas.width, this.viewport.w + dx);
+    this.viewport.h = Math.min(this.canvas.height, this.viewport.h + dy);
+
+    this._clearScene();
+    this._addViewPort();
   }
 
   _findXY() {
@@ -96,15 +174,24 @@ class CutCropImg {
   _onMouseHover(e) {
     e.preventDefault();
     e.stopPropagation();
+    //lock состояния
+    if (this.viewport.isDraggable) return;
 
     const withinViewportX = (this.viewport.x + this.XY.offsetX) <= e.clientX && e.clientX <= (this.viewport.x + this.XY.offsetX + this.viewport.w);
     const withinViewportY = (this.viewport.y + this.XY.offsetY) <= e.clientY && e.clientY <= (this.viewport.y + this.XY.offsetY + this.viewport.h);
-    const cornerViewportLU = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +5 >= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +5 >= e.clientY);
-    const cornerViewportRD = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -5 <= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -5 <= e.clientY);
-    const cornerViewportLD = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +5 >= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -5 <= e.clientY);
-    const cornerViewportRU = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -5 <= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +5 >= e.clientY);
-    
-    this.canvas.style.cursor = withinViewportX && withinViewportY ? 'move' : 'auto';
+    if (this.viewport.changed) {
+      this.viewport.corners.lu =  (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +10 >= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +10 >= e.clientY);
+      this.viewport.corners.rd = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -10 <= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -10 <= e.clientY);
+      this.viewport.corners.ld = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +10 >= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -10 <= e.clientY);
+      this.viewport.corners.ru = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -10 <= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +10 >= e.clientY);
+    }
+
+    if (this.viewport.changed) {
+      const {corners} = this.viewport;
+      this.canvas.style.cursor = corners.lu || corners.rd ? 'nwse-resize' : corners.ld || corners.ru ? 'nesw-resize' : withinViewportX && withinViewportY ? 'move' : 'auto';
+    } else {
+      this.canvas.style.cursor = withinViewportX && withinViewportY ? 'move' : 'auto';
+    }
   }
 
   _onMouseUp(e) {
@@ -133,7 +220,7 @@ class CutCropImg {
     if (params['aspect-ratio']) {
       const aspectRatioArr = params['aspect-ratio'].split('/');
       this.viewport.h = this.viewport.w/aspectRatioArr[0]*aspectRatioArr[1];
-      console.log(this.viewport.h);
+      this.viewport.ar = params['aspect-ratio'];
     }
   }
 
@@ -207,6 +294,6 @@ uploadSelf.addEventListener('change', (e) => {
 });
 
 saveBtnSelf.addEventListener('click', () => {
-  const imaga = cuttie.getCrop({width: 1920, height: 1080});
+  const imaga = cuttie.getCrop();
   resultSelf.src = imaga;
 })
