@@ -9,7 +9,7 @@ const uploadSelf = document.getElementById('uploadSelf');
 class CutCropImg {
   constructor() {
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0}
-    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:null,type:'square',changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
+    this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:[],type:'square',changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
     this.state = false;
     this.image;
     this.maxW;
@@ -149,7 +149,9 @@ class CutCropImg {
     this.viewport.y = Math.min(Math.max(0, this.viewport.y + dy), this.maxH);
 
     this.viewport.w = Math.min(this.canvas.width, this.viewport.w + dx);
-    this.viewport.h = Math.min(this.canvas.height, this.viewport.h - dy);
+    this.viewport.h = Math.max(10, Math.min(this.canvas.height, this.viewport.h - dy));
+
+    console.log(this.viewport);
 
     this._clearScene();
     this._addViewPort();
@@ -158,9 +160,12 @@ class CutCropImg {
   _changeRD(e) {
     const {dx, dy} = this._handleMove(e);
 
-    this.viewport.w = Math.min(this.canvas.width, this.viewport.w + dx);
-    this.viewport.h = Math.min(this.canvas.height, this.viewport.h + dy);
+    const newW = Math.min(this.canvas.width, this.viewport.w + dx);
+    const newH = Math.min(this.canvas.height, this.viewport.h + dy);
 
+    this.viewport.w = newW;
+    this.viewport.h = newH;
+    
     this._clearScene();
     this._addViewPort();
   }
@@ -216,11 +221,11 @@ class CutCropImg {
   }
 
   _initViewPort(params) {
-    this.viewport = {...this.viewport, type: params.type, h: params.height, w: params.width, changed: params.isChanged,ar: params['aspect-ratio']};
+    this.viewport = {...this.viewport, type: params.type, h: params.height, w: params.width, changed: params.isChanged};
     if (params['aspect-ratio']) {
       const aspectRatioArr = params['aspect-ratio'].split('/');
       this.viewport.h = this.viewport.w/aspectRatioArr[0]*aspectRatioArr[1];
-      this.viewport.ar = params['aspect-ratio'];
+      this.viewport.ar = aspectRatioArr;
     }
   }
 
