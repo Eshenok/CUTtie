@@ -6,7 +6,7 @@ const saveBtnSelf = document.getElementById('saveSelf');
 const saveBtnSelfPC = document.getElementById('saveSelfPC');
 const uploadSelf = document.getElementById('uploadSelf');
 
-class CutCropImg {
+class Cuttie {
   constructor() {
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0}
     this.viewport = {x:0,y:0,w:0,h:0,isDraggable:false,ar:[],type:'square',changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
@@ -124,8 +124,16 @@ class CutCropImg {
     this.viewport.x = Math.min(Math.max(0, this.viewport.x + dx), this.maxW);
     this.viewport.y = Math.min(Math.max(0, this.viewport.y + dy), this.maxH);
 
-    this.viewport.w = Math.min(this.canvas.width, this.viewport.w - dx);
-    this.viewport.h = Math.min(this.canvas.height, this.viewport.h - dy);
+    const newW = Math.min(this.canvas.width, this.viewport.w - dx);
+    const newH = Math.min(this.canvas.height, this.viewport.h - dy);
+
+    // if (this.viewport.ar.length) {
+    //   this.viewport.w = newW;
+    //   this.viewport.h = newW/this.viewport.ar[0]*this.viewport.ar[1];
+    // } else {
+    // }
+    this.viewport.w = newW;
+    this.viewport.h = newH;
 
     this._clearScene();
     this._addViewPort();
@@ -242,10 +250,8 @@ class CutCropImg {
     this._initImage(url);
     this.image.onload = () => {
       this.scale = Math.min(this.canvas.width / this.image.width, this.canvas.height / this.image.height);
-      const drawWidth = this.image.width * this.scale;
-      const drawHeight =  this.image.height * this.scale;
-      this.canvas.width = drawWidth;
-      this.canvas.height = drawHeight;
+      this.canvas.width = this.image.width * this.scale;
+      this.canvas.height =  this.image.height * this.scale;
 
       this._initViewPort(params.viewport);
       this._clearScene();
@@ -259,14 +265,13 @@ class CutCropImg {
     const sx = this.viewport.x/this.scale;
     const sy = this.viewport.y/this.scale;
     const sw = this.viewport.w/this.scale;
-    const sh = this.viewport.h/this.scale
+    const sh = this.viewport.h/this.scale;
     canvas.width = params ? params.width : sw;
     canvas.height = params ? params.height : sh;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(this.image, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 
     return canvas.toDataURL('image/jpeg', 1.0);
-
   }
 }
 
@@ -278,7 +283,7 @@ class CutCropImg {
 let cuttie;
 uploadSelf.addEventListener('change', (e) => {
   const url = URL.createObjectURL(e.target.files[0]);
-  cuttie = new CutCropImg()
+  cuttie = new Cuttie()
   cuttie.initCanvas(
     demoSelf, 
     {
