@@ -4,6 +4,7 @@ export default class CuttieHandler {
     this.vpLayer = vpLayer;
     this.viewport = vpLayer.viewport;
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0, pressedPosition: {x: 0,y: 0}}
+    this.corners = {lu:false,ld:false,ru:false,rd:false};
     this.isDraggable = false;
     this.max = {w:0,h:0};
   }
@@ -68,10 +69,25 @@ export default class CuttieHandler {
   }
 
   _handleHoverMouse(e) {
+    //lock состояния
+    if (this.isDraggable) return;
+
     const withinViewportX = (this.viewport.x + this.XY.offsetX) <= e.clientX && e.clientX <= (this.viewport.x + this.XY.offsetX + this.viewport.w);
     const withinViewportY = (this.viewport.y + this.XY.offsetY) <= e.clientY && e.clientY <= (this.viewport.y + this.XY.offsetY + this.viewport.h);
 
-    this.canvas.style.cursor = withinViewportX && withinViewportY ? 'move' : 'auto';
+    if (this.viewport.changed) {
+      this.viewport.corners.lu =  (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +10 >= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +10 >= e.clientY);
+      this.viewport.corners.rd = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -10 <= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -10 <= e.clientY);
+      this.viewport.corners.ld = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +10 >= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -10 <= e.clientY);
+      this.viewport.corners.ru = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -10 <= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +10 >= e.clientY);
+    }
+
+    if (this.viewport.changed) {
+      const {corners} = this.viewport;
+      this.canvas.style.cursor = corners.lu || corners.rd ? 'nwse-resize' : corners.ld || corners.ru ? 'nesw-resize' : withinViewportX && withinViewportY ? 'move' : 'auto';
+    } else {
+      this.canvas.style.cursor = withinViewportX && withinViewportY ? 'move' : 'auto';
+    }
   }
 
   _handleMove(e) {
