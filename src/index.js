@@ -15,11 +15,8 @@ class Cuttie {
     this.imageLayer;
     this.handlerLayer;
     this.bg;
-    this.maxW;
-    this.maxH;
     this.canvas;
     this.ctx;
-    this.scale;
     this.canvasContainer;
   }
 
@@ -55,29 +52,7 @@ class Cuttie {
     this.XY.offsetY = bb.top;
   }
 
-  // _initImage(url, params) {
-  //   const img = new Image();
-  //   img.src = url;
-  //   this.image = img;
-  //   this.image.onload = () => {
-  //     this._onLoadImage();
-  //     this.viewport.initViewport(params.viewport);
-  //     this._findXY();
-  //   }
-  // }
-
-  // _onLoadImage() {
-  //   this.scale = Math.min(this.canvas.width / this.image.width, this.canvas.height / this.image.height);
-  //   this.canvas.width = this.image.width * this.scale;
-  //   this.canvas.height =  this.image.height * this.scale;
-  //   this.bg.width = this.canvas.width;
-  //   this.bg.height = this.canvas.height;
-  //   this.bg.src = this.image.src;
-  // }
-
-  
-
-  async initCanvas(parentElem, params, url) {
+  initCanvas(parentElem, params, url) {
     const oldCanvasDiv = document.getElementById('canvasCuttieDiv');
     if (oldCanvasDiv) {
       parentElem.removeChild(oldCanvasDiv);
@@ -91,19 +66,21 @@ class Cuttie {
     });
   }
 
-  // getCrop(params) {
-  //   const canvas = document.createElement('canvas');
-  //   const sx = this.viewport.x/this.scale;
-  //   const sy = this.viewport.y/this.scale;
-  //   const sw = this.viewport.w/this.scale;
-  //   const sh = this.viewport.h/this.scale;
-  //   canvas.width = params ? params.width : sw;
-  //   canvas.height = params ? params.height : sh;
-  //   const ctx = canvas.getContext('2d');
-  //   ctx.drawImage(this.image, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
+  getCrop(params) {
+    const canvas = document.createElement('canvas');
+    const vp = this.viewportLayer.viewport;
+    const img = this.imageLayer.image;
+    const sx = vp.x/this.imageLayer.scale;
+    const sy = vp.y/this.imageLayer.scale;
+    const sw = vp.w/this.imageLayer.scale;
+    const sh = vp.h/this.imageLayer.scale;
+    canvas.width = params ? params.width : sw;
+    canvas.height = params ? params.height : sh;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 
-  //   return canvas.toDataURL('image/jpeg', 1.0);
-  // }
+    return canvas.toDataURL('image/jpeg', 1.0);
+  }
 }
 
 //=========================================//
