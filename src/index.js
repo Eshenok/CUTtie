@@ -60,7 +60,7 @@ class Cuttie {
     this._createCanvas(params, parentElem);
     this.imageLayer.initImage(url, () => {
       this.viewportLayer.initViewport(params.viewport);
-      this.handlerLayer = new CuttieHandler(this.canvas, this.viewportLayer);
+      this.handlerLayer = new CuttieHandler(this.canvas, this.viewportLayer, this.imageLayer);
       this.handlerLayer.findXY();
       this.handlerLayer.addEventListeners();
     });
