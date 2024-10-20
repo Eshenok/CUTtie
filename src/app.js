@@ -23,7 +23,7 @@ uploadSelf.addEventListener('change', (e) => {
         width: 200,
         height: 200,
         isChanged: true,
-        // 'aspect-ratio': 16/9, 
+        'aspect-ratio': 16/9, 
       }
     },
     url

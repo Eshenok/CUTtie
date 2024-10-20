@@ -13,16 +13,27 @@ export default class CuttieViewport {
 
   drawViewport() {
     this.ctx.fillStyle = '#00000080';
-    // this.ctx.fillRect(0,0,this.canvas.width, this.canvas.height);
-    // this.ctx.fillStyle = '#ffffff20';
-    // this.ctx.fillRect(this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h);
-
     this.ctx.fillRect(0,0,this.viewport.x,this.canvas.height);
     this.ctx.fillRect((this.viewport.x + this.viewport.w),0,this.canvas.width-(this.viewport.x + this.viewport.w),this.canvas.height);
     this.ctx.fillRect(this.viewport.x,0,this.viewport.w,this.viewport.y);
-    this.ctx.fillRect(this.viewport.x,this.viewport.y+this.viewport.h,this.viewport.w,this.canvas.height-(this.viewport.y+this.viewport.h))
+    this.ctx.fillRect(this.viewport.x,this.viewport.y+this.viewport.h,this.viewport.w,this.canvas.height-(this.viewport.y+this.viewport.h));
     this.maxW = this.canvas.width - this.viewport.w;
     this.maxH = this.canvas.height - this.viewport.h;
+    if (this.viewport.changed) {
+      this.drawCorners();
+    }
+  }
+
+  drawCorners() {
+    const {corners} = this.viewport;
+    this.ctx.fillStyle = corners.lu ? '#e89643' : '#000';
+    this.ctx.fillRect(this.viewport.x-2,this.viewport.y-2,5,5);
+    this.ctx.fillStyle = corners.ld ? '#e89643' : '#000';
+    this.ctx.fillRect(this.viewport.x-2,this.viewport.y+this.viewport.h-2,5,5);
+    this.ctx.fillStyle = corners.ru ? '#e89643' : '#000';
+    this.ctx.fillRect(this.viewport.x+this.viewport.w-2,this.viewport.y-2,5,5);
+    this.ctx.fillStyle = corners.rd ? '#e89643' : '#000';
+    this.ctx.fillRect(this.viewport.x+this.viewport.w-2,this.viewport.y+this.viewport.h-2,5,5);
   }
 
   getMax() {
@@ -45,5 +56,8 @@ export default class CuttieViewport {
       this.viewport.ar = ar;
     }
     this.drawViewport();
+    if (this.viewport.changed) {
+      this.drawCorners();
+    }
   }
 }
