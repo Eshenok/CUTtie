@@ -120,16 +120,30 @@ export default class CuttieHandler {
     if (this.viewport.ar) {
       const changed = (dx+dy)-(dx-dy);
       newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w - changed);
-      newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       newX = Math.max(0, this.viewport.x + (this.viewport.w - newW));
       newY = Math.max(0, this.viewport.y + (this.viewport.h - newH));
       if (!newX || !newY) {
         newX = 0;
         newY = 0;
         newW = this.viewport.w;
-        newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+        newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       }
     } else {
+      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w - dx));
+      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h - dy));
+      if (newW !== 10) {
+        newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-newW);
+        if (!newX) {
+          newW = this.viewport.w;
+        }
+      }
+      if (newH !== 10) {
+        newY = Math.min(Math.max(0, this.viewport.y + dy), this.canvas.height-newH);
+        if (!newY) {
+          newH = this.viewport.h
+        }
+      }
     }
 
     this._draw(newX,newY,newW,newH);
@@ -142,16 +156,21 @@ export default class CuttieHandler {
     if (this.viewport.ar) {
       const changed = (dx+dy)-(dx-dy);
       newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w + changed);
-      newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       newX = Math.max(0, this.viewport.x + (this.viewport.w - newW));
       if (!newX) {
         newW = this.viewport.w;
-        newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+        newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       }
     } else {
-      newX = Math.min(Math.max(0, this.viewport.x + dx), this.maxW);
-      newW = Math.min(this.canvas.width, this.viewport.w - dx);
-      newH = Math.min(this.canvas.height, this.viewport.h + dy);
+      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w - dx));
+      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h + dy));
+      if (newW !== 10) {
+        newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-newW);
+        if (!newX) {
+          newW = this.viewport.w;
+        }
+      }
     }
 
     this._draw(newX,false,newW,newH);
@@ -163,18 +182,22 @@ export default class CuttieHandler {
     if (this.viewport.ar) {
       const changed = (dx+dy)+(dx-dy);
       newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w + changed);
-      newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       newY = Math.max(0, this.viewport.y + (this.viewport.h - newH));
       if (!newY) {
         newW = this.viewport.w
         newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
       }
     } else {
-      newY = Math.min(Math.max(0, this.viewport.y + dy), this.max.y);
-      newW = Math.min(this.canvas.width, this.viewport.w + dx);
-      newH = Math.max(10, Math.min(this.canvas.height, this.viewport.h - dy));
+      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w + dx));
+      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h - dy));
+      if (newH !== 10) {
+        newY = Math.min(Math.max(0, this.viewport.y + dy), this.canvas.height-newH);
+        if (!newY) {
+          newH = this.viewport.h;
+        }
+      }
     }
-
 
     this._draw(false,newY,newW,newH);
   }
@@ -186,12 +209,12 @@ export default class CuttieHandler {
     let newH;
     if (this.viewport.ar) {
         const changed = (dx+dy)-(dx-dy);
-        newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w + changed);
-        newH = Math.min(this.canvas.height-this.viewport.y, newW/this.viewport.ar);
+        newW = Math.max(10, Math.min(this.canvas.width - this.viewport.x, this.viewport.w + changed));
+        newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, newW/this.viewport.ar));
         newW = newH*this.viewport.ar;
     } else {
-      newW = Math.min(this.canvas.width-this.viewport.x, this.viewport.w + dx);
-      newH = Math.min(this.canvas.height-this.viewport.y, this.viewport.h + dy);
+      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w + dx));
+      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h + dy));
     }
 
     this._draw(false,false,newW,newH);
