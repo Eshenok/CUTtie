@@ -12,10 +12,15 @@ export default class CuttieViewport {
   }
 
   drawViewport() {
-    this.ctx.fillStyle = '#00000040';
-    this.ctx.fillRect(0,0,this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = '#ffffff20';
-    this.ctx.fillRect(this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h);
+    this.ctx.fillStyle = '#00000080';
+    // this.ctx.fillRect(0,0,this.canvas.width, this.canvas.height);
+    // this.ctx.fillStyle = '#ffffff20';
+    // this.ctx.fillRect(this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h);
+
+    this.ctx.fillRect(0,0,this.viewport.x,this.canvas.height);
+    this.ctx.fillRect((this.viewport.x + this.viewport.w),0,this.canvas.width-(this.viewport.x + this.viewport.w),this.canvas.height);
+    this.ctx.fillRect(this.viewport.x,0,this.viewport.w,this.viewport.y);
+    this.ctx.fillRect(this.viewport.x,this.viewport.y+this.viewport.h,this.viewport.w,this.canvas.height-(this.viewport.y+this.viewport.h))
     this.maxW = this.canvas.width - this.viewport.w;
     this.maxH = this.canvas.height - this.viewport.h;
   }
