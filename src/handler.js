@@ -9,7 +9,7 @@ export default class CuttieHandler {
     this.corners = this.viewport.corners;
     this.isDraggable = false;
     this.max = {w:0,h:0};
-    this.comp = {x:0,y:0}
+    this.comp;
   }
 
   _updateMax() {
@@ -42,12 +42,17 @@ export default class CuttieHandler {
 
     this._updateMax();
     this.isDraggable = true;
-    this.oldVp = this.viewport;
+    this.oldVp = {...this.viewport};
     const mx = parseInt(e.clientX - this.XY.offsetX);
     const my = parseInt(e.clientY - this.XY.offsetY);
     this.XY.startX = mx;
     this.XY.startY = my;
-    this.comp = {x: this.viewport.x+this.viewport.w-mx,y: this.viewport.y+this.viewport.h-my}
+    this.comp = {
+      rdrux: this.viewport.x+this.viewport.w-mx,
+      rdldy: this.viewport.y+this.viewport.h-my,
+      luruy: this.viewport.y-my,
+      ldlux: this.viewport.x-mx,
+    }
   }
 
   _onMouseUp(e) {
@@ -56,8 +61,6 @@ export default class CuttieHandler {
     this.isDraggable = false;
     this.XY.startX = 0;
     this.XY.startY = 0;
-    this.comp = {x:0,y:0}
-    this.vp = undefined;
   }
 
   _handleMoveViewport(e) {
@@ -160,7 +163,7 @@ export default class CuttieHandler {
   }
 
   _changeLD(e) {
-    const {dx, dy} = this._updateXY(e);
+    const {dx, dy,mx,my} = this._updateXY(e);
     let newX, newW, newH;
 
     if (this.viewport.ar) {
@@ -173,14 +176,8 @@ export default class CuttieHandler {
         newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
       }
     } else {
-      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w - dx));
-      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h + dy));
-      if (newW !== 10) {
-        newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-newW);
-        if (!newX) {
-          newW = this.viewport.w;
-        }
-      }
+      newX = Math.max(0, mx+this.comp.ldlux);
+      newW = Math.max(50, Math.min(this.viewport.w+(this.viewport.x-newX)));
     }
 
     this._draw(newX,false,newW,newH);
@@ -189,25 +186,21 @@ export default class CuttieHandler {
   _changeRU(e) {
     const {mx,my} = this._updateXY(e);
     let newY, newW, newH;
-    newW = Math.max(50, Math.min(this.max.w, mx+this.comp.x-this.viewport.x));
+    newW = Math.max(50, Math.min(this.max.w, mx+this.comp.rdrux-this.viewport.x));
     if (this.viewport.ar) {
-      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
-      newY = Math.max(0, this.viewport.y + (this.viewport.h - newH));
+      newH = Math.max(10, newW/this.viewport.ar);
+      newY = Math.max(0, this.viewport.y+(this.viewport.h-newH));
       if (!newY) {
-        newW = this.viewport.w
-        newH = Math.max(10, Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar));
+        newW = this.viewport.w;
+        newH = this.viewport.h;
       }
     } else {
-      newY = Math.max(0, my+this.comp.y);
-      // if (!newY) {
-      //   newH = this.viewport.h;
-      // }
-      // if (newH === 10) {
-      //   newY = this.viewport.y
-      //   if (!newY) {
-      //     newH = this.viewport.h;
-      //   }
-      // }
+      newY = Math.max(0, my+this.comp.luruy);
+      newH = Math.max(50, Math.min(this.viewport.h+(this.viewport.y-newY)));
+      if (newH === 50) {
+        newY = this.viewport.y
+        newH = this.viewport.h
+      }
     }
 
     this._draw(false,newY,newW,newH);
@@ -215,13 +208,13 @@ export default class CuttieHandler {
 
   _changeRD(e) {
     const {mx,my} = this._updateXY(e);
-    let newW = Math.max(50, Math.min(this.max.w, mx+this.comp.x-this.viewport.x));
+    let newW = Math.max(50, Math.min(this.max.w, mx+this.comp.rdrux-this.viewport.x));
     let newH;
     if (this.viewport.ar) {
       newH = Math.max(10, Math.min(this.max.h, newW/this.viewport.ar));
       newW = newH*this.viewport.ar;
     } else {
-      newH = Math.max(50, Math.min(this.max.h, my+this.comp.y-this.viewport.y));
+      newH = Math.max(50, Math.min(this.max.h, my+this.comp.rdldy-this.viewport.y));
     }
 
     this._draw(false,false,newW,newH);
