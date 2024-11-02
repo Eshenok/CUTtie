@@ -41,8 +41,8 @@ export default class CuttieViewport {
   }
 
   updatePosition(x,y,w,h) {
-    this.viewport.x=x?x:this.viewport.x;
-    this.viewport.y=y?y:this.viewport.y;
+    this.viewport.x=x||x===0?x:this.viewport.x;
+    this.viewport.y=y||y===0?y:this.viewport.y;
     this.viewport.h=h?h:this.viewport.h;
     this.viewport.w=w?w:this.viewport.w;
   }

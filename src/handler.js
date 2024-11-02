@@ -127,35 +127,36 @@ export default class CuttieHandler {
   }
 
   _changeLU(e) {
-    const {dx, dy} = this._updateXY(e);
+    const {mx,my} = this._updateXY(e);
     let newX,newY, newW, newH;
+    newX = Math.max(0, mx+this.comp.ldlux);
 
     if (this.viewport.ar) {
-      const changed = (dx+dy)-(dx-dy);
-      newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w - changed);
+      newW = Math.max(50, this.viewport.w+(this.viewport.x-newX));
       newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
-      newX = Math.max(0, this.viewport.x + (this.viewport.w - newW));
-      newY = Math.max(0, this.viewport.y + (this.viewport.h - newH));
-      if (!newX || !newY) {
-        newX = 0;
-        newY = 0;
+      newY = Math.max(0, this.viewport.y+(this.viewport.h-newH));
+      if (!newY) {
         newW = this.viewport.w;
-        newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
+        newX = this.viewport.x;
+        newH = this.viewport.h+(this.viewport.y-newY);
+      }
+      if (!newX) {
+        newW = this.viewport.w+this.viewport.x;
+        newH = newW/this.viewport.ar;
+      }
+      if (newW === 50) {
+        newX = this.viewport.x+(this.viewport.w-newW);
       }
     } else {
-      newW = Math.max(10, Math.min(this.canvas.width-this.viewport.x, this.viewport.w - dx));
-      newH = Math.max(10, Math.min(this.canvas.height-this.viewport.y, this.viewport.h - dy));
-      if (newW !== 10) {
-        newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-newW);
-        if (!newX) {
-          newW = this.viewport.w;
-        }
+      newY = Math.max(0, my+this.comp.luruy);
+      newW = Math.max(50, this.viewport.w+(this.viewport.x-newX));
+      newH = Math.max(50, this.viewport.h+(this.viewport.y-newY));
+
+      if (newW === 50) {
+        newX = this.viewport.x+(this.viewport.w-newW);
       }
-      if (newH !== 10) {
-        newY = Math.min(Math.max(0, this.viewport.y + dy), this.canvas.height-newH);
-        if (!newY) {
-          newH = this.viewport.h;
-        }
+      if (newH === 50) {
+        newY = this.viewport.y+(this.viewport.h-newH);
       }
     }
 
@@ -163,21 +164,27 @@ export default class CuttieHandler {
   }
 
   _changeLD(e) {
-    const {dx, dy,mx,my} = this._updateXY(e);
+    const {mx,my} = this._updateXY(e);
     let newX, newW, newH;
+    newX = Math.max(0, mx+this.comp.ldlux);
 
     if (this.viewport.ar) {
-      const changed = (dx+dy)-(dx-dy);
-      newW = Math.min(this.canvas.width - this.viewport.x, this.viewport.w + changed);
-      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
-      newX = Math.max(0, this.viewport.x + (this.viewport.w - newW));
+      newW = Math.max(50, this.viewport.w+(this.viewport.x-newX));
       if (!newX) {
-        newW = this.viewport.w;
-        newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
+        newW = this.viewport.w+this.viewport.x;
       }
+      if (newW === 50) {
+        newX = this.viewport.x+(this.viewport.w-newW);
+      }
+      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
+
     } else {
-      newX = Math.max(0, mx+this.comp.ldlux);
-      newW = Math.max(50, Math.min(this.viewport.w+(this.viewport.x-newX)));
+      newW = Math.max(50, Math.min(this.max.w, this.viewport.w+(this.viewport.x-newX)));
+      newH = Math.max(50, Math.min(this.max.h, my+this.comp.rdldy-this.viewport.y));
+      if (newW === 50 || !newX) {
+        newX = newX===0?newX:this.viewport.x;
+        newW = this.viewport.w;
+      }
     }
 
     this._draw(newX,false,newW,newH);
@@ -191,14 +198,14 @@ export default class CuttieHandler {
       newH = Math.max(10, newW/this.viewport.ar);
       newY = Math.max(0, this.viewport.y+(this.viewport.h-newH));
       if (!newY) {
-        newW = this.viewport.w;
-        newH = this.viewport.h;
+        newW = this.viewport.w+this.viewport.y*this.viewport.ar
+        newH = Math.max(10, newW/this.viewport.ar);
       }
     } else {
       newY = Math.max(0, my+this.comp.luruy);
-      newH = Math.max(50, Math.min(this.viewport.h+(this.viewport.y-newY)));
+      newH = Math.max(50, this.viewport.h+(this.viewport.y-newY));
       if (newH === 50) {
-        newY = this.viewport.y
+        newY = newY === 0?newY:this.viewport.y
         newH = this.viewport.h
       }
     }
