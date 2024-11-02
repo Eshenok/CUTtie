@@ -16,7 +16,7 @@ uploadSelf.addEventListener('change', (e) => {
     {
       bounds: {
         width: 650,
-        height: 365
+        height: 650,
       },
       viewport: {
         type: 'square',

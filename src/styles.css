@@ -21,6 +21,11 @@ html {
   object-fit: cover;
 }
 
+#demoSelf {
+  width: 650px;
+  height: 650px;
+}
+
 .section__ch {
   display: grid;
   grid-template-columns: 650px 650px;

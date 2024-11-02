@@ -14,26 +14,27 @@ export default class Cuttie {
     this.canvasContainer;
   }
 
-  _createCanvas(params,parent) {
+  _createCanvas(parent, params) {
     this.canvas = document.createElement('canvas');
     this.bg = document.createElement('img');
     this.canvasContainer = document.createElement('div');
     this.ctx = this.canvas.getContext('2d');
     this.ctx.strokeStyle = 'lightgrey';
 
+    this._appendStyles(params, parent)
     this.imageLayer = new CuttieImage(this.canvas, this.bg);
     this.viewportLayer = new CuttieViewport(this.canvas);
-    this._appendStyles(params);
     parent.appendChild(this.canvasContainer);
   }
 
-  _appendStyles(params) {
+  _appendStyles(params, parent) {
     this.canvasContainer.id = 'canvasCuttieDiv';
     this.canvas.id = 'canvasCuttie';
     this.bg.id = 'CuttieBg';
-    this.canvas.width = params.bounds.width;
-    this.canvas.height = params.bounds.height;
-    this.canvasContainer.style = `width: ${params.bounds.width}; height: ${params.bounds.height}; position: relative; background: white`;
+    console.log(parent.clientWidth);
+    this.canvas.width = params.bounds ? params.bounds.width : parent.clientWidth;
+    this.canvas.height = params.bounds ? params.bounds.height : parent.clientHeight;
+    this.canvasContainer.style = `width: ${this.canvas.width}; height: ${this.canvas.height}; position: relative; background: white`;
     this.canvas.style = `z-index: 2; position: absolute; background: transparent; left: 50%;top:50%;transform:translate(-50%,0)`;
     this.bg.style = `z-index: 1;position: absolute; left: 50%;top:50%;transform:translate(-50%,0)`
     this.canvasContainer.appendChild(this.bg);
@@ -51,7 +52,7 @@ export default class Cuttie {
     if (oldCanvasDiv) {
       parentElem.removeChild(oldCanvasDiv);
     }
-    this._createCanvas(params, parentElem);
+    this._createCanvas(parentElem, params);
     this.imageLayer.initImage(url, () => {
       this.viewportLayer.initViewport(params.viewport);
       this.handlerLayer = new CuttieHandler(this.canvas, this.viewportLayer, this.imageLayer);
