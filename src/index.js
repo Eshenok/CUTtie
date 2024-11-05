@@ -30,13 +30,11 @@ export default class Cuttie {
   _appendStyles(params, parent) {
     this.canvasContainer.id = 'canvasCuttieDiv';
     this.canvas.id = 'canvasCuttie';
-    this.bg.id = 'CuttieBg';
+    this.bg.id = 'cuttieBg';
     console.log(parent.clientWidth);
     this.canvas.width = params.bounds ? params.bounds.width : parent.clientWidth;
     this.canvas.height = params.bounds ? params.bounds.height : parent.clientHeight;
-    this.canvasContainer.style = `width: ${this.canvas.width}; height: ${this.canvas.height}; position: relative; background: white`;
-    this.canvas.style = `z-index: 2; position: absolute; background: transparent; left: 50%;top:50%;transform:translate(-50%,0)`;
-    this.bg.style = `z-index: 1;position: absolute; left: 50%;top:50%;transform:translate(-50%,0)`
+    this.canvasContainer.style = `width: ${this.canvas.width}; height: ${this.canvas.height}`;
     this.canvasContainer.appendChild(this.bg);
     this.canvasContainer.appendChild(this.canvas);
   }

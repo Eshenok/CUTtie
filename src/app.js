@@ -14,10 +14,10 @@ uploadSelf.addEventListener('change', (e) => {
   cuttie.initCanvas(
     demoSelf, 
     {
-      bounds: {
-        width: 650,
-        height: 650,
-      },
+      // bounds: {
+      //   width: 600,
+      //   height: 650,
+      // },
       viewport: {
         width: 200,
         height: 200,
