@@ -19,7 +19,6 @@ uploadSelf.addEventListener('change', (e) => {
         height: 650,
       },
       viewport: {
-        type: 'square',
         width: 200,
         height: 200,
         isChanged: true,

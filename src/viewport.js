@@ -49,7 +49,7 @@ export default class CuttieViewport {
 
   initViewport(params) {
     this.ctx = this.canvas.getContext('2d');
-    this.viewport = {...this.viewport, type: params.type, h: params.height, w: params.width, changed: params.isChanged};
+    this.viewport = {...this.viewport, h: params.height, w: params.width, changed: params.isChanged};
     if (params['aspect-ratio']) {
       const ar = params['aspect-ratio'];
       this.viewport.h = this.viewport.w/ar;
