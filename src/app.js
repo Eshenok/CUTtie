@@ -1,6 +1,6 @@
-import Cuttie from "./index.js";
 import './styles.css';
-
+import Cuttie from 'cuttie';
+console.log(Cuttie);
 const resultSelf = document.getElementById('resultSelf');
 const demoSelf = document.getElementById('demoSelf')
 const saveBtnSelf = document.getElementById('saveSelf');
