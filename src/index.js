@@ -34,7 +34,7 @@ export default class Cuttie {
     console.log(parent.clientWidth);
     this.canvas.width = params.bounds ? params.bounds.width : parent.clientWidth;
     this.canvas.height = params.bounds ? params.bounds.height : parent.clientHeight;
-    this.canvasContainer.style = `width: ${this.canvas.width}; height: ${this.canvas.height}`;
+    this.canvasContainer.style = `width: ${this.canvas.width}px; height: ${this.canvas.height}px`;
     this.canvasContainer.appendChild(this.bg);
     this.canvasContainer.appendChild(this.canvas);
   }
