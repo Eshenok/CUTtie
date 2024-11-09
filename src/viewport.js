@@ -14,6 +14,7 @@ export default class CuttieViewport {
   drawViewport() {
     this.ctx.fillStyle = '#00000070';
     this.ctx.fillRect(0,0,this.viewport.x,this.canvas.height);
+    console.log(this.viewport.x);
     this.ctx.fillRect((this.viewport.x + this.viewport.w),0,this.canvas.width-(this.viewport.x + this.viewport.w),this.canvas.height);
     this.ctx.fillRect(this.viewport.x,0,this.viewport.w,this.viewport.y);
     this.ctx.fillRect(this.viewport.x,this.viewport.y+this.viewport.h,this.viewport.w,this.canvas.height-(this.viewport.y+this.viewport.h));
@@ -27,13 +28,13 @@ export default class CuttieViewport {
   drawCorners() {
     const {corners} = this.viewport;
     this.ctx.fillStyle = corners.lu ? '#e89643' : '#f1f1f1';
-    this.ctx.fillRect(this.viewport.x-2,this.viewport.y-2,5,5);
+    this.ctx.fillRect(this.viewport.x,this.viewport.y,5,5);
     this.ctx.fillStyle = corners.ld ? '#e89643' : '#f1f1f1';
-    this.ctx.fillRect(this.viewport.x-2,this.viewport.y+this.viewport.h-2,5,5);
+    this.ctx.fillRect(this.viewport.x,this.viewport.y+this.viewport.h-5,5,5);
     this.ctx.fillStyle = corners.ru ? '#e89643' : '#f1f1f1';
-    this.ctx.fillRect(this.viewport.x+this.viewport.w-2,this.viewport.y-2,5,5);
+    this.ctx.fillRect(this.viewport.x+this.viewport.w-5,this.viewport.y,5,5);
     this.ctx.fillStyle = corners.rd ? '#e89643' : '#f1f1f1';
-    this.ctx.fillRect(this.viewport.x+this.viewport.w-2,this.viewport.y+this.viewport.h-2,5,5);
+    this.ctx.fillRect(this.viewport.x+this.viewport.w-5,this.viewport.y+this.viewport.h-5,5,5);
   }
 
   getMax() {
@@ -51,18 +52,26 @@ export default class CuttieViewport {
     this.ctx = this.canvas.getContext('2d');
     this.viewport = {...this.viewport, h: params.height, w: params.width, changed: params.isChanged};
 
-    if (this.canvas.height < this.viewport.h) {
-      this.viewport.h = this.canvas.height;
-    }
-
     if (this.canvas.width < this.viewport.w) {
       this.viewport.w = this.canvas.width;
     }
 
+    if (this.canvas.height < this.viewport.h) {
+      this.viewport.h = this.canvas.height;
+    }
+
     if (params['aspect-ratio']) {
       const ar = params['aspect-ratio'];
-      this.viewport.h = this.viewport.w/ar;
       this.viewport.ar = ar;
+      this.viewport.h = this.viewport.w/ar;
+      
+
+      if (this.canvas.height < this.viewport.h) {
+        this.viewport.h = this.canvas.height;
+      }
+
+      this.viewport.w = Math.floor(this.viewport.h*ar);
+      this.viewport.h = this.viewport.w/ar;
     }
 
     this.drawViewport();

@@ -60,10 +60,10 @@ export default class CuttieHandler {
 
   _handleMoveViewport(e) {
     if (!this.isDraggable) return;
-    const {dx,dy} = this._updateXY(e,true);
+    const {mx,my} = this._updateXY(e,true);
 
-    const newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-this.viewport.w);
-    const newY = Math.min(Math.max(0, this.viewport.y + dy), this.canvas.height-this.viewport.h);
+    const newX = Math.min(Math.max(0, this.comp.ldlux + mx), this.canvas.width-this.viewport.w);
+    const newY = Math.min(Math.max(0, this.comp.luruy + my), this.canvas.height-this.viewport.h);
     this._draw(newX,newY,false,false);
   }
 
@@ -219,21 +219,13 @@ export default class CuttieHandler {
     this._draw(false,false,newW,newH);
   }
 
-  _updateXY(e,isDx) {
+  _updateXY(e) {
     const mx = parseInt(e.clientX - this.XY.offsetX);
     const my = parseInt(e.clientY - this.XY.offsetY);
-    let dx,dy;
-    if (isDx) {
-      dx = mx - this.XY.startX;
-      dy = my - this.XY.startY;
 
-      this.XY.startX = mx;
-      this.XY.startY = my;
-    } else {
-      this.XY.startX = mx;
-      this.XY.startY = my;
-    }
-    return {mx,my,dx,dy};
+    this.XY.startX = mx;
+    this.XY.startY = my;
+    return {mx,my};
   }
 
 }
