@@ -14,27 +14,37 @@ export default class Cuttie {
     this.canvasContainer;
   }
 
-  _createCanvas(parent, params) {
+  _createCanvas(parent, params, url) {
     this.canvas = document.createElement('canvas');
     this.bg = document.createElement('img');
     this.canvasContainer = document.createElement('div');
     this.ctx = this.canvas.getContext('2d');
     this.ctx.strokeStyle = 'lightgrey';
 
-    this._appendStyles(params, parent)
+    this._appendStyles(params, parent, url)
     this.imageLayer = new CuttieImage(this.canvas, this.bg);
     this.viewportLayer = new CuttieViewport(this.canvas);
     parent.appendChild(this.canvasContainer);
   }
 
-  _appendStyles(params, parent) {
+  _appendStyles(params, parent, url) {
     this.canvasContainer.id = 'canvasCuttieDiv';
     this.canvas.id = 'canvasCuttie';
     this.bg.id = 'cuttieBg';
-    console.log(parent.clientWidth);
     this.canvas.width = params.bounds ? params.bounds.width : parent.clientWidth;
     this.canvas.height = params.bounds ? params.bounds.height : parent.clientHeight;
-    this.canvasContainer.style = `width: ${this.canvas.width}px; height: ${this.canvas.height}px`;
+    this.canvasContainer.style = `width: ${this.canvas.width}px; height: ${this.canvas.height}px;`;
+    
+    const bg = params.background;
+    if (bg && (bg.image || bg.parentImage)) {
+      this.canvasContainer.className = 'canvasCuttieDivImageBg'
+      this.canvasContainer.style.backgroundImage = `url(${bg.image ? bg.image : url})`
+    }
+
+    if (bg && bg.color) {
+      this.canvasContainer.style.backgroundColor = bg.color;
+    }
+
     this.canvasContainer.appendChild(this.bg);
     this.canvasContainer.appendChild(this.canvas);
   }
@@ -50,7 +60,7 @@ export default class Cuttie {
     if (oldCanvasDiv) {
       parentElem.removeChild(oldCanvasDiv);
     }
-    this._createCanvas(parentElem, params);
+    this._createCanvas(parentElem, params, url);
     this.imageLayer.initImage(url, () => {
       this.viewportLayer.initViewport(params.viewport);
       this.handlerLayer = new CuttieHandler(this.canvas, this.viewportLayer, this.imageLayer);
