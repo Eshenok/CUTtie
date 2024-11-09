@@ -4,7 +4,7 @@ export default class CuttieViewport {
     this.ctx;
     this.maxW;
     this.maxH;
-    this.viewport = {x:0,y:0,w:0,h:0,ar:0,type:'square',changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
+    this.viewport = {x:0,y:0,w:0,h:0,ar:0,changed:false,corners:{lu:false,ld:false,ru:false,rd:false}};
   }
 
   clearScene() {
@@ -50,14 +50,21 @@ export default class CuttieViewport {
   initViewport(params) {
     this.ctx = this.canvas.getContext('2d');
     this.viewport = {...this.viewport, h: params.height, w: params.width, changed: params.isChanged};
+
+    if (this.canvas.height < this.viewport.h) {
+      this.viewport.h = this.canvas.height;
+    }
+
+    if (this.canvas.width < this.viewport.w) {
+      this.viewport.w = this.canvas.width;
+    }
+
     if (params['aspect-ratio']) {
       const ar = params['aspect-ratio'];
       this.viewport.h = this.viewport.w/ar;
       this.viewport.ar = ar;
     }
+
     this.drawViewport();
-    if (this.viewport.changed) {
-      this.drawCorners();
-    }
   }
 }

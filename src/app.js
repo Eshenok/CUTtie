@@ -1,6 +1,5 @@
 import './styles.css';
-import Cuttie from 'cuttie';
-console.log(Cuttie);
+import Cuttie from './index.js';
 const resultSelf = document.getElementById('resultSelf');
 const demoSelf = document.getElementById('demoSelf')
 const saveBtnSelf = document.getElementById('saveSelf');
@@ -19,7 +18,7 @@ uploadSelf.addEventListener('change', (e) => {
         height: 200,
       },
       viewport: {
-        width: 200,
+        width: 750,
         height: 200,
         isChanged: true,
         'aspect-ratio': 16/9,

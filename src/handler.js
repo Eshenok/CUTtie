@@ -4,7 +4,6 @@ export default class CuttieHandler {
     this.vpLayer = vpLayer;
     this.imgLayer = imgLayer;
     this.viewport = vpLayer.viewport;
-    this.oldVp;
     this.XY = {offsetX:0,offsetY:0,startX:0,startY:0}
     this.corners = this.viewport.corners;
     this.isDraggable = false;
@@ -42,11 +41,7 @@ export default class CuttieHandler {
 
     this._updateMax();
     this.isDraggable = true;
-    this.oldVp = {...this.viewport};
-    const mx = parseInt(e.clientX - this.XY.offsetX);
-    const my = parseInt(e.clientY - this.XY.offsetY);
-    this.XY.startX = mx;
-    this.XY.startY = my;
+    const {mx,my} = this._updateXY(e);
     this.comp = {
       rdrux: this.viewport.x+this.viewport.w-mx,
       rdldy: this.viewport.y+this.viewport.h-my,
@@ -65,13 +60,7 @@ export default class CuttieHandler {
 
   _handleMoveViewport(e) {
     if (!this.isDraggable) return;
-    const mx = parseInt(e.clientX - this.XY.offsetX);
-    const my = parseInt(e.clientY - this.XY.offsetY);
-
-    const dx = mx - this.XY.startX;
-    const dy = my - this.XY.startY;
-    this.XY.startX = mx;
-    this.XY.startY = my;
+    const {dx,dy} = this._updateXY(e,true);
 
     const newX = Math.min(Math.max(0, this.viewport.x + dx), this.canvas.width-this.viewport.w);
     const newY = Math.min(Math.max(0, this.viewport.y + dy), this.canvas.height-this.viewport.h);
@@ -230,16 +219,21 @@ export default class CuttieHandler {
     this._draw(false,false,newW,newH);
   }
 
-  _updateXY(e) {
+  _updateXY(e,isDx) {
     const mx = parseInt(e.clientX - this.XY.offsetX);
     const my = parseInt(e.clientY - this.XY.offsetY);
+    let dx,dy;
+    if (isDx) {
+      dx = mx - this.XY.startX;
+      dy = my - this.XY.startY;
 
-    const dx = mx - this.XY.startX;
-    const dy = my - this.XY.startY;
-
-    this.XY.startX = mx;
-    this.XY.startY = my;
-    return {dx,dy,mx,my};
+      this.XY.startX = mx;
+      this.XY.startY = my;
+    } else {
+      this.XY.startX = mx;
+      this.XY.startY = my;
+    }
+    return {mx,my,dx,dy};
   }
 
 }
