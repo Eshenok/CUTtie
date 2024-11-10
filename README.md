@@ -1,29 +1,34 @@
-![Cuttie](/asset/cuttie_b.png)
+![Cuttie](/src/asset/cuttie_w.png)
 
-## Documentation;
+Photo cropper in JS with quick settings. You can embed it into any of your projects.
 
-> First you need to create empty Cuttie
+## Documentation 📖
 
+> ### First you need to install and create empty Cuttie 💿
 ```
+npm install cuttie
+```
+
+``` javascript
 const cuttie = new Cuttie();
 ```
 
-> The next step is to initialize Cuttie with params
+> ### The next step is to initialize Cuttie with params 🖥️
 >> **parent** - accepts the parent element in which the cropping window will be embedded
 >> 
 >> **params** - accepts insertion and viewport parameters
 >> 
 >> **url** - image url
 
-```
+``` javascript
 cuttie.initCanvas(
-    parent, 
-    params,
-    url
-  );
+  parent, 
+  params,
+  url
+);
 ```
 
-> Now about **params**
+> ### Now about **params** 🔎
 >> **bounds** - optional; Set the size of the editing window. If the field is missing it will adjust to the size of the parent.
 >> 
 >> **viewport** - required; Set the initial dimensions of the cropping window. **isChanged** and **aspect-ratio** are optional fields.
@@ -34,7 +39,7 @@ You can set the background of the container (the image will be adjusted to the s
 Default background is white.
 >>> Priority: 1 - image; 2 - parentImage; 3 - color;
 
-```
+``` javascript
 {
       bounds: {
         width: 650,
@@ -54,8 +59,8 @@ Default background is white.
     }
 ```
 
-> Get cropped image
+> ### Get cropped image 💾
 >> method **getCrop** return url string;
-```
+``` javascript
 cuttie.getCrop();
 ```
