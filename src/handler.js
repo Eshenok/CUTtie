@@ -27,6 +27,11 @@ export default class CuttieHandler {
     this.canvas.onmouseup = this._onMouseUp.bind(this);
     this.canvas.onmousemove = this._handleMove.bind(this);
     this.canvas.onmouseleave = this._onMouseUp.bind(this);
+
+    this.canvas.ontouchstart = this._onMouseDown.bind(this);
+    this.canvas.ontouchend = this._onMouseUp.bind(this);
+    this.canvas.ontouchmove = this._handleMove.bind(this);
+    this.canvas.ontouchcancel = this._onMouseUp.bind(this);
   }
 
   _draw(x,y,w,h) {
@@ -40,7 +45,9 @@ export default class CuttieHandler {
     e.stopPropagation();
 
     this._updateMax();
-    this.isDraggable = true;
+    if (!e.touches) {
+      this.isDraggable = true;
+    }
     const {mx,my} = this._updateXY(e);
     this.comp = {
       rdrux: this.viewport.x+this.viewport.w-mx,
@@ -54,13 +61,14 @@ export default class CuttieHandler {
     e.preventDefault();
     e.stopPropagation();
     this.isDraggable = false;
+    console.log(this.isDraggable);
     this.XY.startX = 0;
     this.XY.startY = 0;
   }
 
   _handleMoveViewport(e) {
     if (!this.isDraggable) return;
-    const {mx,my} = this._updateXY(e,true);
+    const {mx,my} = this._updateXY(e);
 
     const newX = Math.min(Math.max(0, this.comp.ldlux + mx), this.canvas.width-this.viewport.w);
     const newY = Math.min(Math.max(0, this.comp.luruy + my), this.canvas.height-this.viewport.h);
@@ -70,15 +78,17 @@ export default class CuttieHandler {
   _handleHoverMouse(e) {
     //lock состояния
     if (this.isDraggable) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    const withinViewportX = (this.viewport.x + this.XY.offsetX) <= e.clientX && e.clientX <= (this.viewport.x + this.XY.offsetX + this.viewport.w);
-    const withinViewportY = (this.viewport.y + this.XY.offsetY) <= e.clientY && e.clientY <= (this.viewport.y + this.XY.offsetY + this.viewport.h);
+    const withinViewportX = (this.viewport.x + this.XY.offsetX) <= clientX && clientX <= (this.viewport.x + this.XY.offsetX + this.viewport.w);
+    const withinViewportY = (this.viewport.y + this.XY.offsetY) <= clientY && clientY <= (this.viewport.y + this.XY.offsetY + this.viewport.h);
 
     if (this.viewport.changed) {
-      this.corners.lu = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +20 >= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +20 >= e.clientY);
-      this.corners.rd = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -20 <= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -20 <= e.clientY);
-      this.corners.ld = (this.viewport.x + this.XY.offsetX <= e.clientX && this.viewport.x + this.XY.offsetX +20 >= e.clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= e.clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -20 <= e.clientY);
-      this.corners.ru = (this.viewport.x + this.viewport.w + this.XY.offsetX >= e.clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -20 <= e.clientX) && (this.viewport.y + this.XY.offsetY <= e.clientY && this.viewport.y + this.XY.offsetY +20 >= e.clientY);
+      this.corners.lu = (this.viewport.x + this.XY.offsetX <= clientX && this.viewport.x + this.XY.offsetX +20 >= clientX) && (this.viewport.y + this.XY.offsetY <= clientY && this.viewport.y + this.XY.offsetY +20 >= clientY);
+      this.corners.rd = (this.viewport.x + this.viewport.w + this.XY.offsetX >= clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -20 <= clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -20 <= clientY);
+      this.corners.ld = (this.viewport.x + this.XY.offsetX <= clientX && this.viewport.x + this.XY.offsetX +20 >= clientX) && (this.viewport.y + this.viewport.h + this.XY.offsetY >= clientY && this.viewport.y + this.viewport.h + this.XY.offsetY -20 <= clientY);
+      this.corners.ru = (this.viewport.x + this.viewport.w + this.XY.offsetX >= clientX && this.viewport.x + this.viewport.w + this.XY.offsetX -20 <= clientX) && (this.viewport.y + this.XY.offsetY <= clientY && this.viewport.y + this.XY.offsetY +20 >= clientY);
       this.vpLayer.drawCorners();
     }
 
@@ -86,6 +96,9 @@ export default class CuttieHandler {
       this.canvas.style.cursor = this.corners.lu || this.corners.rd ? 'nwse-resize' : this.corners.ld || this.corners.ru ? 'nesw-resize' : withinViewportX && withinViewportY ? 'move' : 'auto';
     } else {
       this.canvas.style.cursor = withinViewportX && withinViewportY ? 'move' : 'auto';
+    }
+    if (e.touches) {
+      this.isDraggable = true;
     }
   }
 
@@ -122,7 +135,7 @@ export default class CuttieHandler {
 
     if (this.viewport.ar) {
       newW = Math.max(50, this.viewport.w+(this.viewport.x-newX));
-      newH = Math.min(this.canvas.height - this.viewport.y, newW/this.viewport.ar);
+      newH = newW/this.viewport.ar;
       newY = Math.max(0, this.viewport.y+(this.viewport.h-newH));
       if (!newY) {
         newW = this.viewport.w;
@@ -220,8 +233,14 @@ export default class CuttieHandler {
   }
 
   _updateXY(e) {
-    const mx = parseInt(e.clientX - this.XY.offsetX);
-    const my = parseInt(e.clientY - this.XY.offsetY);
+    let mx,my
+    if (e.touches) {
+      mx = parseInt(e.touches[0].clientX - this.XY.offsetX);
+      my = parseInt(e.touches[0].clientY - this.XY.offsetY);
+    } else {
+      mx = parseInt(e.clientX - this.XY.offsetX);
+      my = parseInt(e.clientY - this.XY.offsetY);
+    }
 
     this.XY.startX = mx;
     this.XY.startY = my;
