@@ -26,7 +26,7 @@ uploadSelf.addEventListener('change', (e) => {
       },
       background: {
         color: 'red',
-        // image: background,
+        image: background,
         parentImage: true,
       }
     },
