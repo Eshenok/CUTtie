@@ -61,7 +61,6 @@ export default class CuttieHandler {
     e.preventDefault();
     e.stopPropagation();
     this.isDraggable = false;
-    console.log(this.isDraggable);
     this.XY.startX = 0;
     this.XY.startY = 0;
   }
