@@ -12,13 +12,54 @@ html {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  /* justify-content: center; */
+}
+
+#canvasCuttieDiv {
+  position: relative;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.canvasCuttieDivImageBg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff80;
+  filter: blur(10px);
+}
+
+#canvasCuttie {
+  z-index: 2; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  position: absolute; 
+  background: transparent;
 }
 
 #resultTiny {
   width: 100%;
   height: 365px;
   object-fit: cover;
+}
+
+#cuttieBg {
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  position: absolute;
+}
+
+#demoSelf {
+  width: 100%;
+  height: 600px;
+  /* overflow: scroll; */
 }
 
 .section__ch {
