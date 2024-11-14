@@ -69,6 +69,14 @@ export default class Cuttie {
     });
   }
 
+  getPosition() {
+    return this.viewportLayer.getPosition();
+  }
+
+  updatePosition(x,y,w,h) {
+    this.viewportLayer.updatePosition(x,y,w,h);
+  }
+
   getCrop(params) {
     const canvas = document.createElement('canvas');
     const vp = this.viewportLayer.viewport;

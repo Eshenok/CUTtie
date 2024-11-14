@@ -61,6 +61,33 @@ Default background is white.
 
 > ### Get cropped image 💾
 >> method **getCrop** return url string;
-``` javascript
-cuttie.getCrop();
+>> without params **getCrop** return scaled crop by current aspect-ratio 
+>> or you can add params:
+ ``` javascript
+ // return scaled crop by current aspect-ratio
+ cuttie.getCrop(); 
+ ```
+``` typescript
+// If the width and height do not match the aspect-ratio, 
+// will fill the problems with black
+cuttie.getCrop({width: number, height: number})
+``` 
+
+> ### Get current viewport position 🧭
+>> method **getPosition** кeturns an object of the form:
+``` typescript
+{
+  x: number,
+  y: number,
+  width: number,
+  height: number
+}
+```
+
+> ### You can directly change viewport values 🔢
+>> method **updatePosition** takes 4 parameters as input:
+``` typescript
+cuttie.updatePosition(
+  x: number,y: number, width: number, height: number
+  )
 ```

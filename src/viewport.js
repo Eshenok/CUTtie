@@ -40,6 +40,10 @@ export default class CuttieViewport {
     return {maxW:this.maxW,maxH:this.maxH}
   }
 
+  getPosition() {
+    return {x: this.viewport.x, y: this.viewport.y, width: this.viewport.w, height: this.viewport.h}
+  }
+
   updatePosition(x,y,w,h) {
     this.viewport.x=x||x===0?x:this.viewport.x;
     this.viewport.y=y||y===0?y:this.viewport.y;
