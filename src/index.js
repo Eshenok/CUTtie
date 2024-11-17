@@ -31,8 +31,8 @@ export default class Cuttie {
     this.canvasContainer.id = 'canvasCuttieDiv';
     this.canvas.id = 'canvasCuttie';
     this.bg.id = 'cuttieBg';
-    this.canvas.width = params.bounds ? params.bounds.width : parent.clientWidth;
-    this.canvas.height = params.bounds ? params.bounds.height : parent.clientHeight;
+    this.canvas.width = params.bounds.width ? params.bounds.width : parent.clientWidth;
+    this.canvas.height = params.bounds.height ? params.bounds.height : parent.clientHeight;
     this.canvasContainer.style = `width: ${this.canvas.width}px; height: ${this.canvas.height}px;`;
     
     const bg = params.background;

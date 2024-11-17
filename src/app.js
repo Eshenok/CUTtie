@@ -1,40 +1,60 @@
 import './styles.css';
-import Cuttie from './index.js';
-import background from './asset/coolbackgrounds.io.png'
-const resultSelf = document.getElementById('resultSelf');
-const demoSelf = document.getElementById('demoSelf')
-const saveBtnSelf = document.getElementById('saveSelf');
-const saveBtnSelfPC = document.getElementById('saveSelfPC');
-const uploadSelf = document.getElementById('uploadSelf');
+import Cuttie from './index';
+
+const form = document.getElementById('form');
+const isAuto = document.getElementById('b-check');
+const boundsWidth = document.getElementById('b-w');
+const boundsHeight = document.getElementById('b-h');
+
+const viewportWidth = document.getElementById('v-w');
+const viewportHeight = document.getElementById('v-h');
+const viewportChanged = document.getElementById('v-check');
+const viewportAr = document.getElementById('v-ar');
+
+const uploadImgContainer = document.getElementById('dnd__label-ch');
+const uploadImg = document.getElementById('dnd__ch');
+
+const saveBtnSelf = document.getElementById('savefirst');
+const saveBtnFile = document.getElementById('savefile');
+
+const parent = document.getElementById('cuttie-parent');
+const resultElement = document.getElementById('cuttie-result');
 
 let cuttie;
-uploadSelf.addEventListener('change', (e) => {
+
+const handleUploadImage = (e) => {
   const url = URL.createObjectURL(e.target.files[0]);
+  if (!url) return;
+
   cuttie = new Cuttie();
-  cuttie.initCanvas(
-    demoSelf, 
-    {
-      bounds: {
-        width: 650,
-        height: 200,
-      },
-      viewport: {
-        width: 750,
-        height: 200,
-        isChanged: true,
-        'aspect-ratio': 16/9,
-      },
-      background: {
-        color: 'red',
-        image: background,
-        parentImage: true,
-      }
+  const options = {
+    bounds: {
+      width: isAuto && boundsWidth.value,
+      height: isAuto && boundsHeight.value
     },
+    viewport: {
+      width: viewportWidth.value,
+      height: viewportHeight.value,
+      isChanged: viewportChanged.value,
+      'aspect-ratio': viewportAr.value
+    },
+    background: {
+      parentImage: true
+    }
+  };
+
+  cuttie.initCanvas(
+    parent, 
+    options,
     url
   )
-});
 
-saveBtnSelf.addEventListener('click', () => {
-  const imaga = cuttie.getCrop();
-  resultSelf.src = imaga;
-})
+  saveBtnSelf.addEventListener('click', () => {
+    const imaga = cuttie.getCrop();
+    resultElement.src = imaga;
+    resultElement.style.backgroundColor = '#fff';
+  })
+}
+
+
+uploadImg.addEventListener('change', handleUploadImage);
