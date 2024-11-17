@@ -49,21 +49,20 @@
           </label>
           <label class="label">
             aspect-ratio:
-            <input id="v-ar" type="number" class="input inputText">
+            <input id="v-ar" type="text" class="input inputText">
           </label>
           <h3 class="h3">&#125;</h3>
         </div>
-
-        <div class="dnd">
-          <img src="./asset/uploadIcon.svg" alt="UPLOAD" class="dnd__icon" />
-          <p class="p dnd__text">
-            Drop file here or
-          </p>
-          <label id="dnd__label-ch" class="dnd__label">
-            choose file
-            <input type="file" class="input" id="dnd__ch">
-          </label>
-        </div>
+      </form>
+      <form id="dnd" class="dnd">
+        <img src="./asset/uploadIcon.svg" alt="UPLOAD" class="dnd__icon" />
+        <p class="p dnd__text">
+          Drop file here or
+        </p>
+        <label id="dnd__label-ch" class="dnd__label">
+          choose file
+          <input type="file" accept="image/png, image/jpeg" class="input" id="dnd__ch">
+        </label>
       </form>
     </header>
 

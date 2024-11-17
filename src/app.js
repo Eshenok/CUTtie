@@ -11,7 +11,7 @@ const viewportHeight = document.getElementById('v-h');
 const viewportChanged = document.getElementById('v-check');
 const viewportAr = document.getElementById('v-ar');
 
-const uploadImgContainer = document.getElementById('dnd__label-ch');
+const uploadImgContainer = document.getElementById('dnd');
 const uploadImg = document.getElementById('dnd__ch');
 
 const saveBtnSelf = document.getElementById('savefirst');
@@ -23,7 +23,9 @@ const resultElement = document.getElementById('cuttie-result');
 let cuttie;
 
 const handleUploadImage = (e) => {
-  const url = URL.createObjectURL(e.target.files[0]);
+  e.preventDefault();
+  console.log(e.dataTransfer);
+  const url = e.dataTransfer ? URL.createObjectURL(Array.from(e.dataTransfer.files)[0]) : URL.createObjectURL(e.target.files[0]);
   if (!url) return;
 
   cuttie = new Cuttie();
@@ -56,5 +58,21 @@ const handleUploadImage = (e) => {
   })
 }
 
+uploadImgContainer.addEventListener("dragenter", function(e) {
+  e.preventDefault();
+  uploadImgContainer.style.cursor = 'move';
+})
+
+uploadImgContainer.addEventListener("dragover", function(e) {
+  e.preventDefault();
+  uploadImgContainer.style.cursor = 'move';
+});
+
+uploadImgContainer.addEventListener("dragleave", function(e) {
+  e.preventDefault();
+  uploadImgContainer.style.cursor = 'auto';
+});
+
+uploadImgContainer.addEventListener("drop", handleUploadImage);
 
 uploadImg.addEventListener('change', handleUploadImage);
