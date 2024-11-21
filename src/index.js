@@ -69,6 +69,10 @@ export default class Cuttie {
     });
   }
 
+  getCurrentBound() {
+    return {width: this.canvas.width, height: this.canvas.height}
+  }
+
   getPosition() {
     return this.viewportLayer.getPosition();
   }
