@@ -1,5 +1,5 @@
 import './styles.css';
-import Cuttie from './index';
+import Cuttie from 'cuttie';
 
 const form = document.getElementById('form');
 const isAuto = document.getElementById('b-check');
@@ -29,21 +29,24 @@ const handleUploadImage = (e) => {
   if (!url) return;
 
   cuttie = new Cuttie();
+  const ar = viewportAr.value ? viewportAr.value.split('/') : null;
   const options = {
     bounds: {
-      width: isAuto && boundsWidth.value,
-      height: isAuto && boundsHeight.value
+      width: isAuto.checked && boundsWidth.value,
+      height: isAuto.checked && boundsHeight.value
     },
     viewport: {
       width: viewportWidth.value,
       height: viewportHeight.value,
-      isChanged: viewportChanged.value,
-      'aspect-ratio': viewportAr.value
+      isChanged: viewportChanged.checked,
+      'aspect-ratio': ar ? Number(ar[0])/Number(ar[1]) : undefined
     },
     background: {
       parentImage: true
     }
   };
+
+  console.log(options);
 
   cuttie.initCanvas(
     parent, 
