@@ -1,7 +1,6 @@
 import './styles.css';
 import Cuttie from 'cuttie';
 
-const form = document.getElementById('form');
 const isAuto = document.getElementById('b-check');
 const boundsWidth = document.getElementById('b-w');
 const boundsHeight = document.getElementById('b-h');
@@ -46,8 +45,6 @@ const handleUploadImage = (e) => {
     }
   };
 
-  console.log(options);
-
   cuttie.initCanvas(
     parent, 
     options,
@@ -58,6 +55,16 @@ const handleUploadImage = (e) => {
     const imaga = cuttie.getCrop();
     resultElement.src = imaga;
     resultElement.style.backgroundColor = '#fff';
+  })
+
+  saveBtnFile.addEventListener('click', () => {
+    const imaga = cuttie.getCrop();
+    const a = document.createElement('a');
+    a.href = imaga;
+    a.download = 'cuttie.png';
+    parent.appendChild(a);
+    a.click();
+    parent.removeChild(a);
   })
 }
 
