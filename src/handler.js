@@ -183,7 +183,7 @@ export default class CuttieHandler {
         newX = this.viewport.x;
       }
     } else {
-      newW = Math.max(50, Math.min(this.max.w, this.viewport.w+(this.viewport.x-newX)));
+      newW = Math.max(50,  this.viewport.w+(this.viewport.x-newX));
       newH = Math.max(50, Math.min(this.max.h, my+this.comp.rdldy-this.viewport.y));
       if (newW === 50 || !newX) {
         newX = newX===0?newX:this.viewport.x;

@@ -1,6 +1,6 @@
 {
   "name": "cuttie",
-  "version": "0.0.3",
+  "version": "1.0.2",
   "description": "croppper image for js",
   "main": "index.html",
   "scripts": {
@@ -29,13 +29,12 @@
     "@babel/preset-env": "^7.25.7",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
+    "cuttie": "^1.0.3",
+    "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
     "style-loader": "^4.0.0",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
-  },
-  "dependencies": {
-    "cuttie": "^0.0.9"
   }
 }

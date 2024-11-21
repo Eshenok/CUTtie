@@ -26,9 +26,13 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.png$/,        // файлы
-        type: 'asset/resource' // тип модуля
-      }
+        test: /\.(jpg|png|svg|jpeg|gif)$/,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.html$/,
+        use: 'html-loader'
+    },
     ]
   },
   plugins: [
