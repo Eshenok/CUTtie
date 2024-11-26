@@ -110,6 +110,6 @@ export default class Cuttie {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 
-    return canvas.toDataURL('image/jpg', 1.0);
+    return canvas.toDataURL('image/png', 1.0);
   }
 }
