@@ -1,5 +1,5 @@
 import './styles.css';
-import Cuttie from 'cuttie';
+import Cuttie from './index';
 
 const isAuto = document.getElementById('b-check');
 const boundsWidth = document.getElementById('b-w');
@@ -15,19 +15,27 @@ const uploadImg = document.getElementById('dnd__ch');
 
 const saveBtnSelf = document.getElementById('savefirst');
 const saveBtnFile = document.getElementById('savefile');
+const saveBtnFIleResult = document.getElementById('savefileResult');
+const loadFileBtn = document.getElementById('loadfile');
 
 const parent = document.getElementById('cuttie-parent');
 const resultElement = document.getElementById('cuttie-result');
 
+//layout
+const harrow = document.getElementById('h_arr');
+const resultContainer = document.getElementById('result');
+const closeBtn = document.getElementById('close-result');
+const overlayResult = document.getElementById('overlay-result');
+
 let cuttie;
+cuttie = new Cuttie();
 
 const handleUploadImage = (e) => {
   e.preventDefault();
-  console.log(e.dataTransfer);
   const url = e.dataTransfer ? URL.createObjectURL(Array.from(e.dataTransfer.files)[0]) : URL.createObjectURL(e.target.files[0]);
   if (!url) return;
 
-  cuttie = new Cuttie();
+  
   const ar = viewportAr.value ? viewportAr.value.split('/') : null;
   const options = {
     bounds: {
@@ -35,8 +43,8 @@ const handleUploadImage = (e) => {
       height: isAuto.checked && boundsHeight.value
     },
     viewport: {
-      width: viewportWidth.value,
-      height: viewportHeight.value,
+      width: Number(viewportWidth.value),
+      height: Number(viewportHeight.value),
       isChanged: viewportChanged.checked,
       'aspect-ratio': ar ? Number(ar[0])/Number(ar[1]) : undefined
     },
@@ -49,9 +57,21 @@ const handleUploadImage = (e) => {
     parent, 
     options,
     url
-  )
+  );
+
+  const bounds = cuttie.getCurrentBounds();
+  boundsWidth.value = bounds.width;
+  boundsHeight.value = bounds.height; 
+
+  setTimeout(() => {
+    const viewportPos = cuttie.getPosition();
+    viewportWidth.value = viewportPos.width;
+    viewportHeight.value = viewportPos.height;
+  }, 100)
+
 
   saveBtnSelf.addEventListener('click', () => {
+    resultContainer.classList.add('crop-window_open');
     const imaga = cuttie.getCrop();
     resultElement.src = imaga;
     resultElement.style.backgroundColor = '#fff';
@@ -65,6 +85,24 @@ const handleUploadImage = (e) => {
     parent.appendChild(a);
     a.click();
     parent.removeChild(a);
+  })
+
+  saveBtnFIleResult.addEventListener('click', () => {
+    const imaga = cuttie.getCrop();
+    const a = document.createElement('a');
+    a.href = imaga;
+    a.download = 'cuttie.png';
+    parent.appendChild(a);
+    a.click();
+    parent.removeChild(a);
+  })
+
+  viewportWidth.addEventListener('change', (e) => {
+    cuttie.updatePosition(0,0,e.target.value,0)
+  })
+
+  viewportHeight.addEventListener('change', (e) => {
+    cuttie.updatePosition(0,0,0,e.target.value);
   })
 }
 
@@ -86,3 +124,19 @@ uploadImgContainer.addEventListener("dragleave", function(e) {
 uploadImgContainer.addEventListener("drop", handleUploadImage);
 
 uploadImg.addEventListener('change', handleUploadImage);
+
+loadFileBtn.addEventListener('click', () => {
+  dnd__ch.click();
+});
+
+harrow.addEventListener('click', () => {
+  harrow.classList.toggle('header__burger_open');
+})
+
+closeBtn.addEventListener('click', () => {
+  resultContainer.classList.remove('crop-window_open');
+})
+
+overlayResult.addEventListener('click', () => {
+  resultContainer.classList.remove('crop-window_open');
+})

@@ -44,9 +44,9 @@ export default class Cuttie {
     if (bg && bg.color) {
       this.canvasContainer.style.backgroundColor = bg.color;
     }
-
-    this.canvasContainer.appendChild(this.bg);
     this.canvasContainer.appendChild(this.canvas);
+    this.canvasContainer.appendChild(this.bg);
+    
   }
 
   _findXY() {
@@ -69,7 +69,7 @@ export default class Cuttie {
     });
   }
 
-  getCurrentBound() {
+  getCurrentBounds() {
     return {width: this.canvas.width, height: this.canvas.height}
   }
 
@@ -78,10 +78,19 @@ export default class Cuttie {
   }
 
   updatePosition(x,y,w,h) {
-    this.viewportLayer.updatePosition(x,y,w,h);
+    const params = [x, y, w, h].map(Number);
+
+    for (const param of params) {
+      if (isNaN(param)) { 
+        console.error(`Can't update position, params only number`);
+        return;
+      }
+    }
+    params[2] = Math.min(w, this.canvas.width);
+    this.viewportLayer.updatePosition(...params);
   }
 
-  getCrop(params) {
+  getCrop(width, height) {
     const canvas = document.createElement('canvas');
     const vp = this.viewportLayer.viewport;
     const img = this.imageLayer.image;
@@ -89,8 +98,8 @@ export default class Cuttie {
     const sy = vp.y/this.imageLayer.scale;
     const sw = vp.w/this.imageLayer.scale;
     const sh = vp.h/this.imageLayer.scale;
-    canvas.width = params ? params.width : sw;
-    canvas.height = params ? params.height : sh;
+    canvas.width = width ?? sw;
+    canvas.height = height ?? sh;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 

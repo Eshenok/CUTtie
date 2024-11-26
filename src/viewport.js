@@ -49,6 +49,8 @@ export default class CuttieViewport {
     this.viewport.y=y||y===0?y:this.viewport.y;
     this.viewport.h=h?h:this.viewport.h;
     this.viewport.w=w?w:this.viewport.w;
+    this.clearScene();
+    this.drawViewport();
   }
 
   initViewport(params) {
