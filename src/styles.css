@@ -136,6 +136,7 @@ input[type='number'] {
 }
 
 #dnd {
+  cursor: pointer;
   height: 150px;
   border: 2px dashed #3e3e3e;
   background-color: #f3f3f3;

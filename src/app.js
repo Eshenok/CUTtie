@@ -1,5 +1,5 @@
 import './styles.css';
-import Cuttie from 'cuttie';
+import Cuttie from './index';
 
 const isAuto = document.getElementById('b-check');
 const boundsWidth = document.getElementById('b-w');
@@ -30,23 +30,30 @@ const overlayResult = document.getElementById('overlay-result');
 let cuttie;
 cuttie = new Cuttie();
 
+function arToNumber(stringAr) {
+  const ar = stringAr.split('/');
+  if (ar.length !== 2) return null;
+  const r = Number(ar[0])/Number(ar[1]);
+  return Boolean(r) ? r : null;
+}
+
 const handleUploadImage = (e) => {
   e.preventDefault();
   const url = e.dataTransfer ? URL.createObjectURL(Array.from(e.dataTransfer.files)[0]) : URL.createObjectURL(e.target.files[0]);
   if (!url) return;
 
   
-  const ar = viewportAr.value ? viewportAr.value.split('/') : null;
+  const ar = viewportAr.value ? arToNumber(viewportAr.value) : null;
   const options = {
     bounds: {
-      width: isAuto.checked && boundsWidth.value,
-      height: isAuto.checked && boundsHeight.value
+      width: isAuto.checked ? undefined : boundsWidth.value,
+      height: isAuto.checked ? undefined : boundsHeight.value
     },
     viewport: {
       width: Number(viewportWidth.value),
       height: Number(viewportHeight.value),
       isChanged: viewportChanged.checked,
-      'aspect-ratio': ar ? Number(ar[0])/Number(ar[1]) : undefined
+      'aspect-ratio': ar ? ar : undefined
     },
     background: {
       parentImage: true
@@ -104,24 +111,33 @@ const handleUploadImage = (e) => {
   viewportHeight.addEventListener('change', (e) => {
     cuttie.updatePosition(0,0,0,e.target.value);
   })
+
+  viewportAr.addEventListener('change', (e) => {
+    console.log(arToNumber(e.target.value));
+    cuttie.updateAr(arToNumber(e.target.value))
+  })
 }
 
 uploadImgContainer.addEventListener("dragenter", function(e) {
   e.preventDefault();
-  uploadImgContainer.style.cursor = 'move';
+  uploadImgContainer.style.cursor = 'pointer';
 })
 
 uploadImgContainer.addEventListener("dragover", function(e) {
   e.preventDefault();
-  uploadImgContainer.style.cursor = 'move';
+  uploadImgContainer.style.cursor = 'pointer';
 });
 
 uploadImgContainer.addEventListener("dragleave", function(e) {
   e.preventDefault();
-  uploadImgContainer.style.cursor = 'auto';
+  uploadImgContainer.style.cursor = 'pointer';
 });
 
 uploadImgContainer.addEventListener("drop", handleUploadImage);
+
+uploadImgContainer.addEventListener("click", () => {
+  dnd__ch.click();
+})
 
 uploadImg.addEventListener('change', handleUploadImage);
 

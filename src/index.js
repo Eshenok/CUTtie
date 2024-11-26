@@ -31,8 +31,9 @@ export default class Cuttie {
     this.canvasContainer.id = 'canvasCuttieDiv';
     this.canvas.id = 'canvasCuttie';
     this.bg.id = 'cuttieBg';
-    this.canvas.width = params.bounds.width ? params.bounds.width : parent.clientWidth;
-    this.canvas.height = params.bounds.height ? params.bounds.height : parent.clientHeight;
+    console.log(params)
+    this.canvas.width = params.bounds.width ? Number(params.bounds.width) : parent.clientWidth;
+    this.canvas.height = params.bounds.height ? Number(params.bounds.height) : parent.clientHeight;
     this.canvasContainer.style = `width: ${this.canvas.width}px; height: ${this.canvas.height}px;`;
     
     const bg = params.background;
@@ -90,8 +91,13 @@ export default class Cuttie {
     this.viewportLayer.updatePosition(...params);
   }
 
+  updateAr(ar) {
+    this.viewportLayer.updateAr(ar);
+  }
+
   getCrop(width, height) {
     const canvas = document.createElement('canvas');
+    canvas.style.backgroundColor = 'transparent';
     const vp = this.viewportLayer.viewport;
     const img = this.imageLayer.image;
     const sx = vp.x/this.imageLayer.scale;
@@ -103,6 +109,6 @@ export default class Cuttie {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, sx, sy, sw, sh,0,0,canvas.width,canvas.height);
 
-    return canvas.toDataURL('image/jpeg', 1.0);
+    return canvas.toDataURL('image/jpg', 1.0);
   }
 }

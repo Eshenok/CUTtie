@@ -29,7 +29,7 @@
     "@babel/preset-env": "^7.25.7",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
-    "cuttie": "^1.1.1",
+    "cuttie": "^1.1.2",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
     "style-loader": "^4.0.0",
