@@ -89,6 +89,7 @@ export default class Cuttie {
     }
     params[2] = Math.min(w, this.canvas.width);
     this.viewportLayer.updatePosition(...params);
+    this.viewportLayer.updateAr(this.viewportLayer.viewport.ar);
   }
 
   updateAr(ar) {

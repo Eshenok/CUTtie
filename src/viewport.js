@@ -45,15 +45,15 @@ export default class CuttieViewport {
   }
 
   updatePosition(x,y,w,h) {
+    this.viewport.h=h?Math.min(this.canvas.height, h):this.viewport.h;
+    this.viewport.w=w?Math.min(this.canvas.width, w):this.viewport.w;
     this.viewport.x=x||x===0?x:this.viewport.x;
     this.viewport.y=y||y===0?y:this.viewport.y;
-    this.viewport.h=h?h:this.viewport.h;
-    this.viewport.w=w?w:this.viewport.w;
     this.clearScene();
     this.drawViewport();
   }
 
-  _updateWithAr(ar) {
+  updateWithAr(ar) {
     this.viewport.ar = ar;
     this.viewport.h = this.viewport.w/ar;
       
@@ -80,7 +80,7 @@ export default class CuttieViewport {
 
     if (params['aspect-ratio']) {
       const ar = Number(params['aspect-ratio']);
-      this._updateWithAr(ar);
+      this.updateWithAr(ar);
     }
 
     this.drawViewport();
@@ -90,7 +90,7 @@ export default class CuttieViewport {
     if (!ar) {
       this.viewport.ar = 0;
     } else {
-      this._updateWithAr(ar);
+      this.updateWithAr(ar);
     }
     this.clearScene();
     this.drawViewport();

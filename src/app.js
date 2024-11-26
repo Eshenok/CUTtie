@@ -1,5 +1,5 @@
 import './styles.css';
-import Cuttie from 'cuttie';
+import Cuttie from './index';
 
 const isAuto = document.getElementById('b-check');
 const boundsWidth = document.getElementById('b-w');
