@@ -91,3 +91,9 @@ cuttie.updatePosition(
   x: number,y: number, width: number, height: number
   )
 ```
+
+> ### DEMO
+>> https://eshenok.github.io/CUTtie/
+
+> ### Github
+>> https://github.com/Eshenok/CUTtie
