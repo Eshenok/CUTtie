@@ -93,6 +93,12 @@ cuttie.updatePosition(
 ```
 >> This method works very carefully, it does not take into account aspect-ratio and viewport size, it interacts directly with the viewport
  
+> ### Update Aspect-ratio 🖼
+>> method **updateAr** takes string as input:
+``` javascript
+cuttie.updateAr('16/9');
+```
+
 | Demo | Github |
 |------|--------|
 |https://eshenok.github.io/CUTtie/|https://github.com/Eshenok/CUTtie|
