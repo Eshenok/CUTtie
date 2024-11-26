@@ -70,7 +70,7 @@ Default background is white.
 ``` typescript
 // If the width and height do not match the aspect-ratio, 
 // will fill the problems with black
-cuttie.getCrop({width: number, height: number})
+cuttie.getCrop(width: number, height: number)
 ``` 
 
 > ### Get current viewport position 🧭
