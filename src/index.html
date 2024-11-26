@@ -7,13 +7,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>cuttie - js cropper</title>
+    <title>CUTtie - js cropper</title>
   </head>
 
   <body class="body">
     <header class="header">
+      <div class="header__burger" id="h_arr">
+        <span class="header__arrow"></span>
+      </div>
       <img alt="cuttie" class="logo" src="./asset/cuttie_b.png"/>
-      <h2 class="h2">options</h2>
+      <h2 class="h2 options">options</h2>
       <form id="form" class="form">
         <div class="form-cont div">
           <h3 class="h3">bounds: &#123;</h3>
@@ -68,22 +71,29 @@
 
     <main class="main">
       <div class="crop-windows">
-        <div class="crop-window">
+        <div id="parent" class="crop-window">
           <h2 class="h2 crop-window__title">ParentElement</h2>
           <div class="crop-window__cropbox" id="cuttie-parent"></div>
         </div>
   
-        <div class="crop-window">
+        
+        <div id="result" class="crop-window result">
           <h2 class="h2 crop-window__title">Result</h2>
           <div class="crop-window__cropbox">
             <img id="cuttie-result"/>
           </div>
+          <button id="savefileResult" type="button" class="btn crop-btn">Save in file</button>
+          <button type="button" class="crop-window__close" id="close-result"></button>
         </div>
+        
+        <div id="overlay-result" class="result__overlay"></div>
       </div>
 
       <div class="crop-btns">
+        <button id="loadfile" type="button" class="btn crop-btn loadfile-btn">Load file</button>
         <button id="savefirst" type="button" class="btn crop-btn">Save</button>
         <button id="savefile" type="button" class="btn crop-btn">Save in file</button>
+        
       </div>
     </main>
   </body>

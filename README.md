@@ -91,3 +91,4 @@ cuttie.updatePosition(
   x: number,y: number, width: number, height: number
   )
 ```
+>> This method works very carefully, it does not take into account aspect-ratio and viewport size, it interacts directly with the viewport
