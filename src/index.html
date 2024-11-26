@@ -3,37 +3,99 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="js cropper" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>CUTtie - js cropper</title>
   </head>
 
   <body class="body">
+    <header class="header">
+      <div class="header__burger" id="h_arr">
+        <span class="header__arrow"></span>
+      </div>
+      <img alt="cuttie" class="logo" src="./asset/cuttie_b.png"/>
+      <h2 class="h2 options">options</h2>
+      <form id="form" class="form">
+        <div class="form-cont div">
+          <h3 class="h3">bounds: &#123;</h3>
+          <label class="label">
+            auto:
+            <input name="bounds-auto" id="b-check" type="checkbox" class="input inputChecked" />
+          </label>
+  
+          <label class="label">
+            width:
+            <input id="b-w" type="number" class="input inputText"></input>
+          </label>
+          <label class="label">
+            height:
+            <input id="b-h" type="number" class="input inputText"></input>
+          </label>
+          <h3 class="h3">&#125;</h3>
+        </div>
+
+        <div class="div form-cont">
+          <h3 class="h3">viewport: &#123;</h3>
+          <label class="label">
+            width:
+            <input id="v-w" type="number" class="input inputText"></input>
+          </label>
+          <label class="label">
+            height:
+            <input id="v-h" type="number" class="input inputText"></input>
+          </label>
+          <label class="label">
+            isChanged:
+            <input name="viewport-c" id="v-check" type="checkbox" class="input inputChecked">
+          </label>
+          <label class="label">
+            aspect-ratio:
+            <input id="v-ar" type="text" class="input inputText">
+          </label>
+          <h3 class="h3">&#125;</h3>
+        </div>
+      </form>
+      <form id="dnd" class="dnd">
+        <img src="./asset/uploadIcon.svg" alt="UPLOAD" class="dnd__icon" />
+        <p class="p dnd__text">
+          Drop file here or
+        </p>
+        <label id="dnd__label-ch" class="dnd__label">
+          choose file
+          <input type="file" accept="image/png, image/jpeg" class="input" id="dnd__ch">
+        </label>
+      </form>
+    </header>
+
     <main class="main">
-
-      <section class="section self">
-        <h2 class="title">"CUTtie"</h2>
+      <div class="crop-windows">
+        <div id="parent" class="crop-window">
+          <h2 class="h2 crop-window__title">ParentElement</h2>
+          <div class="crop-window__cropbox" id="cuttie-parent"></div>
+        </div>
+  
         
-        <input type="file" class="section__upload" id="uploadSelf" />
-        <div class="section__ch">
-          <article>
-            <h3 class="subtitle">INPUT</h3>
-            <div class="demo" id="demoSelf"></div>
-          </article>
-          <article>
-            <h3 class="subtitle">OUTPUT</h3>
-            <img class="result" id="resultSelf" />
-          </article>
-          
+        <div id="result" class="crop-window result">
+          <h2 class="h2 crop-window__title">Result</h2>
+          <div class="crop-window__cropbox">
+            <img id="cuttie-result"/>
+          </div>
+          <button id="savefileResult" type="button" class="btn crop-btn">Save in file</button>
+          <button type="button" class="crop-window__close" id="close-result"></button>
         </div>
+        
+        <div id="overlay-result" class="result__overlay"></div>
+      </div>
 
-        <div class="section__btns">
-          <button class="main-btn croppie__save" id="saveSelf">
-            Save
-          </button>
-          <button class="main-btn croppie__save" id="saveSelfPC">
-            Save on PC
-          </button>
-        </div>
-      </section>
+      <div class="crop-btns">
+        <button id="loadfile" type="button" class="btn crop-btn loadfile-btn">Load file</button>
+        <button id="savefirst" type="button" class="btn crop-btn">Save</button>
+        <button id="savefile" type="button" class="btn crop-btn">Save in file</button>
+        
+      </div>
     </main>
   </body>
-  <!-- <script src="index.js"></script> -->
+  <!-- <script src="app.js"></script> -->
 </html>

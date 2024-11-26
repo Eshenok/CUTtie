@@ -15,29 +15,8 @@ export default class CuttieHandler {
     this.max = {w: this.vpLayer.getMax().maxW, h: this.vpLayer.getMax().maxH};
   }
 
-  findXY() {
-    const bb = this.canvas.getBoundingClientRect();
-    this.XY.offsetX = bb.left;
-    this.XY.offsetY = bb.top;
-  }
-
-  addEventListeners() {
-    this.findXY();
-    this.canvas.onmousedown = this._onMouseDown.bind(this);
-    this.canvas.onmouseup = this._onMouseUp.bind(this);
-    this.canvas.onmousemove = this._handleMove.bind(this);
-    this.canvas.onmouseleave = this._onMouseUp.bind(this);
-
-    this.canvas.ontouchstart = this._onMouseDown.bind(this);
-    this.canvas.ontouchend = this._onMouseUp.bind(this);
-    this.canvas.ontouchmove = this._handleMove.bind(this);
-    this.canvas.ontouchcancel = this._onMouseUp.bind(this);
-  }
-
   _draw(x,y,w,h) {
     this.vpLayer.updatePosition(x,y,w,h);
-    this.vpLayer.clearScene();
-    this.vpLayer.drawViewport();
   }
 
   _onMouseDown(e) {
@@ -183,7 +162,7 @@ export default class CuttieHandler {
         newX = this.viewport.x;
       }
     } else {
-      newW = Math.max(50, Math.min(this.max.w, this.viewport.w+(this.viewport.x-newX)));
+      newW = Math.max(50,  this.viewport.w+(this.viewport.x-newX));
       newH = Math.max(50, Math.min(this.max.h, my+this.comp.rdldy-this.viewport.y));
       if (newW === 50 || !newX) {
         newX = newX===0?newX:this.viewport.x;
@@ -246,4 +225,22 @@ export default class CuttieHandler {
     return {mx,my};
   }
 
+  findXY() {
+    const bb = this.canvas.getBoundingClientRect();
+    this.XY.offsetX = bb.left;
+    this.XY.offsetY = bb.top;
+  }
+
+  addEventListeners() {
+    this.findXY();
+    this.canvas.onmousedown = this._onMouseDown.bind(this);
+    this.canvas.onmouseup = this._onMouseUp.bind(this);
+    this.canvas.onmousemove = this._handleMove.bind(this);
+    this.canvas.onmouseleave = this._onMouseUp.bind(this);
+
+    this.canvas.ontouchstart = this._onMouseDown.bind(this);
+    this.canvas.ontouchend = this._onMouseUp.bind(this);
+    this.canvas.ontouchmove = this._handleMove.bind(this);
+    this.canvas.ontouchcancel = this._onMouseUp.bind(this);
+  }
 }
